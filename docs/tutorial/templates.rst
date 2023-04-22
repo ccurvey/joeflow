@@ -16,10 +16,10 @@ Django will search for a template precisely that order. This allows you to
 create a base template for all human tasks but also override override them
 individually should that be needed.
 
-Following the example please
-create a file named ``app_name/workflow_form.html`` in your template folder.
-The ``app_nam`` should be replaced by the application name in which you crated
-your Welcome workflow. Now fill the file with a simple form template:
+Following the example please create a new ``templates/personnel`` directory, and
+within there, create a file named ``welcomeworkflow_start.html``
+
+Now fill the file with a simple form template:
 
 .. code-block:: html
 
@@ -39,6 +39,27 @@ your Welcome workflow. Now fill the file with a simple form template:
     </html>
 
 Of course you can make it prettier, but this will work.
+
+Restart your development server, then hit http://localhost:8000/personnel/welcome/start/  
+You should see a nice form.  But there are no users set up in our system yet,
+set let's create a superuser called "alex".  (Usually this would not be a superuser,
+but we need something to touch.)
+
+    $ python manage.py createsuperuser 
+    Username (leave blank to use 'chris'): alex
+    Email address: alex@example.com
+    Password: 
+    Password (again): 
+    This password is too short. It must contain at least 8 characters.
+    This password is too common.
+    Bypass password validation and create user anyway? [y/N]: y   
+    Superuser created successfully.
+
+Now we can go back to http://localhost:8000/personnel/welcome/start/ , and we
+can see "alex" in the drop-down.  Choose Alex, hit "submit"....and you'll get
+another "TemplateDoesNotExist" error.  That's OK...there's another template
+we have to create that shows the detail
+
 
 Besides the tasks a workflow comes with two more views by default. A workflow
 detail view and a view to manually override the current workflow state.
@@ -98,5 +119,20 @@ to make your workflow feel more alive.
     </html>
 
 You are all set! Spin up your application and play around with it.
+
+One more thing.  The "send_mail" task is supposed to run in the background, so
+we will need a background worker to process it.  And since we don't want to 
+really send mail, add this to the bottom of your ``settings.py`` file:
+
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+Now you can start a background worker to actually run the background tasks.  
+
+    python manage.py rundramatiq --threads=1
+    
+**REVIEWERS:** I'm using Dramatiq + Redis (it's a personal problem)...do we
+need instructions here on how to run a celery worker (that will work with 
+SQLite?)
+
 Once you are done come back to learn
 :ref:`how to write tests in the next part of our tutorial<tutorial-testing>`.
