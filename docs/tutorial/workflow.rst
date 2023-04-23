@@ -25,13 +25,14 @@ the workflow will end right away.
 
 Set up a project and app that we can work with:
 
-.. code-block:: python
+.. code-block:: bash
     $ django-admin startproject myproject
     $ cd myproject
     $ python manage.py startapp personnel
     
 In myproject/settings.py, add this to the bottom of the file
 
+.. code-block:: python
     INSTALLED_APPS.append("joeflow")
     INSTALLED_APPS.append("personnel")
     
@@ -111,7 +112,7 @@ It is just added for readability and could be omitted. Any tasks that does
 not have a child task defined in ``edges`` or returns an empty list is
 considered a workflow end.
 
-Create the relevant database structures with:
+Create a table in the database to hold instances of your WelcomeWorkflow:
 
 .. code-block:: bash
 
@@ -134,7 +135,8 @@ In ``personnel/urls.py`` (a new file):
     ]
 
 
-in ``myproject.urls``
+Make your personnel URLs available to your server by editing ``myproject/urls.py``
+
 .. code-block:: python
 
     from django.contrib import admin
