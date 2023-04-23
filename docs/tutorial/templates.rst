@@ -8,15 +8,15 @@ name is similar as it is for a
 :class:`CreateView<django.views.generic.edit.CreateView>` but with more
 options. Default template names are::
 
-    app_name/welcomeworkflow_start.html
-    app_name/welcomeworkflow_form.html
-    app_name/workflow_form.html
+    personnel/welcomeworkflow_start.html
+    personnel/welcomeworkflow_form.html
+    personnel/workflow_form.html
 
 Django will search for a template precisely that order. This allows you to
 create a base template for all human tasks but also override override them
 individually should that be needed.
 
-Following the example please create a new ``templates/personnel`` directory, and
+Following the example please create a new ``templates/personnel`` directory (inside your existing "personnel" directory, and
 within there, create a file named ``welcomeworkflow_start.html``
 
 Now fill the file with a simple form template:
@@ -45,8 +45,10 @@ You should see a nice form.  But there are no users set up in our system yet,
 set let's create a superuser called "alex".  (Usually this would not be a superuser,
 but we need something to touch.)
 
+.. code-block:: bash
+
     $ python manage.py createsuperuser 
-    Username (leave blank to use 'chris'): alex
+    Username (leave blank to use 'xxxx'): alex
     Email address: alex@example.com
     Password: 
     Password (again): 
@@ -58,24 +60,9 @@ but we need something to touch.)
 Now we can go back to http://localhost:8000/personnel/welcome/start/ , and we
 can see "alex" in the drop-down.  Choose Alex, hit "submit"....and you'll get
 another "TemplateDoesNotExist" error.  That's OK...there's another template
-we have to create that shows the detail
+we just have to create a template for the detail view.  
 
-
-Besides the tasks a workflow comes with two more views by default. A workflow
-detail view and a view to manually override the current workflow state.
-
-The manual override view will also use the ``workflow_form.html`` template
-that you have already created. You can of course create a more specific
-template. Django will search for templates in the following order::
-
-    app_name/welcomeworkflow_override.html
-    app_name/workflow_override.html
-    app_name/welcomeworkflow_form.html
-    app_name/workflow_form.html
-
-Last but not least you will need a template for the workflow detail view.
-You don't really need to add anything here, but lets add a little information
-to make your workflow feel more alive.
+Create a ``templates/personnel/welcomeworkflow_detail.html`` page and put this in it:
 
 .. code-block:: html
 
@@ -117,6 +104,22 @@ to make your workflow feel more alive.
       <a href="{{ object.get_override_url }}">Override</a>
     </body>
     </html>
+
+
+The manual override view will also use the ``workflow_form.html`` template
+that you have already created. You can of course create a more specific
+template. Django will search for templates in the following order::
+
+    app_name/welcomeworkflow_override.html
+    app_name/workflow_override.html
+    app_name/welcomeworkflow_form.html
+    app_name/workflow_form.html
+
+Last but not least you will need a template for the workflow detail view.
+You don't really need to add anything here, but lets add a little information
+to make your workflow feel more alive.
+
+
 
 You are all set! Spin up your application and play around with it.
 
